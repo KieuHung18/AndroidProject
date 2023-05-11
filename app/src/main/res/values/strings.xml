@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Gallery</string>
+    <string name="editTextEmailHint">
+        <font size="14"> <b>Email address</b></font>
+    </string>
+</resources>

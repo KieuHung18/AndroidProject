@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="28dp">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <ImageButton
+                android:id="@+id/close"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:backgroundTint="#00910909"
+                app:srcCompat="@drawable/close" />
+
+            <TextView
+                android:id="@+id/textviewLogin"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:text="Log  in"
+                android:textStyle="bold" />
+        </FrameLayout>
+
+    </LinearLayout>
+
+    <Button
+        app:backgroundTint="@color/neutral_100"
+        android:id="@+id/googleLogin"
+        android:drawableLeft="@drawable/google"
+        style="@style/RoundedButton"
+        android:textColor="@color/black"
+        android:text="Continue with Google" />
+
+    <TextView
+        android:id="@+id/or"
+        android:layout_margin="30dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Or" />
+
+    <EditText
+        android:layout_marginVertical="10dp"
+        app:backgroundTint="@color/neutral_100"
+        android:id="@+id/editTextEmailAddress"
+        style="@style/RoundedInput"
+        android:hint="@string/editTextEmailHint"
+        android:inputType="textEmailAddress" />
+    <EditText
+        app:backgroundTint="@color/neutral_100"
+        android:id="@+id/editTextPassword"
+        style="@style/RoundedInput"
+        android:hint="@string/editTextEmailHint"
+        android:inputType="textEmailAddress" />
+    <Button
+        android:layout_marginVertical="30dp"
+        android:id="@+id/login"
+        style="@style/RoundedButton"
+        android:text="Log in" />
+    <TextView
+        android:textStyle="bold"
+        android:id="@+id/forgotPassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Forgot password" />
+
+</LinearLayout>
