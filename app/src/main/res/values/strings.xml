@@ -3,4 +3,16 @@
     <string name="editTextEmailHint">
         <font size="14"> <b>Email address</b></font>
     </string>
+    <string name="editTextPasswordHint">
+        <font size="14"> <b>Password</b></font>
+    </string>
+    <string name="editTextConfirmPasswordHint">
+        <font size="14"> <b>Confirm password</b></font>
+    </string>
+    <string name="firstNameHint">
+        <font size="14"> <b>First name</b></font>
+    </string>
+    <string name="lastNameHint">
+        <font size="14"> <b>Last name</b></font>
+    </string>
 </resources>

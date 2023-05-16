@@ -1,11 +1,13 @@
 package com.example.gallery;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 
 import androidx.annotation.Nullable;
@@ -19,23 +21,31 @@ import org.json.JSONObject;
 public class LoginActivity extends AppCompatActivity {
     private ImageButton close;
     private Button login;
+    private EditText email,password;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_activity);
         close = (ImageButton) findViewById(R.id.close);
         login = (Button) findViewById(R.id.login);
+        email = (EditText) findViewById(R.id.editTextEmailAddress);
+        password = (EditText) findViewById(R.id.editTextPassword);
 
+        Bundle extras = getIntent().getExtras();
+        email.setText(extras.getString("emailAddress"));
         login.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 JSONObject postData = new JSONObject();
                 try {
-                    postData.put("email", "kieuhungcm2015@gmail.com");
-                    postData.put("password", "123456");
+//                    postData.put("email", "kieuhungcm2015@gmail.com");
+//                    postData.put("password", "123456");
+                    postData.put("email", email.getText().toString());
+                    postData.put("password", password.getText().toString());
                     new LoginTask().execute("/admin/auth/login", postData.toString());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+
             }
         });
         close.setOnClickListener(
@@ -50,26 +60,28 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    private class LoginTask extends AsyncTask<String, Void, String> {
+    private class LoginTask extends AsyncTask<String, Void, JSONObject> {
         @Override
-        protected String doInBackground(String... params) {
+        protected JSONObject doInBackground(String... params) {
             Request request = new Request(LoginActivity.this);
             return request.doPost(params[0],params[1]);
         }
 
         @Override
-        protected void onPostExecute(String result) {
+        protected void onPostExecute(JSONObject result) {
             try {
-                JSONObject response = new JSONObject(result);
+                String response = result.getString("response");
                 SharedPreferences pref = getApplicationContext().getSharedPreferences("Login", MODE_PRIVATE);
                 SharedPreferences.Editor Ed=pref.edit();
-                Ed.putString("authentication",response.getString("response") );
+                Ed.putString("authentication",response );
                 Ed.commit();
+                finish();
+                startActivity(new Intent(LoginActivity.this,HomeActivity.class));
             } catch (JSONException e) {
-                throw new RuntimeException(e);
+                new AlertMessage(LoginActivity.this).show(
+                    new HandleRequestError().handle(result).getMessage()
+                );
             }
-            super.onPostExecute(result);
-
         }
     }
 

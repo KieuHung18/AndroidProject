@@ -2,29 +2,39 @@ package com.example.gallery.services;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.util.UUID;
 
 public class Request {
-    public static final String  BACKEND_URL="http://172.24.179.73:3001";
+
+    private static String localhost = "http://172.24.179.73:3001";
+
+    //            "http://10.0.2.2:3001";
+    private String host = "https://kieuhung18-info.onrender.com";
+    public static final String  BACKEND_URL=localhost;
     private String authentication;
     public Request(Context context){
         SharedPreferences pref = context.getSharedPreferences("Login", 0);
         authentication = pref.getString("authentication", null);
     }
-    public String doPost(String url, String postData){
+    public JSONObject doPost(String url, String postData){
         url=BACKEND_URL+url;
         String data = "";
         HttpURLConnection httpURLConnection = null;
         try {
             httpURLConnection = (HttpURLConnection) new URL(url).openConnection();
+            httpURLConnection.setConnectTimeout(5000);
             httpURLConnection.setRequestMethod("POST");
             httpURLConnection.setRequestProperty("Content-Type", "application/json");
             httpURLConnection.setRequestProperty("authentication", authentication);
@@ -49,16 +59,25 @@ public class Request {
                 httpURLConnection.disconnect();
             }
         }
-        return data;
+
+        JSONObject response = null;
+        try {
+            response = new JSONObject(data);
+        } catch (JSONException e) {
+            Log.e("Request", "doPost: "+e.getMessage() );
+        }
+        return response;
+
     };
 
     public JSONObject doGet(String url){
+
         return null;
     };
 
-    public String doUpload(String url, byte[] postData){
+    public String doUpload(byte[] postData){
         //implements file name, file description
-        url=BACKEND_URL+url;
+        String url=BACKEND_URL+"/upload";
         String data = "";
         HttpURLConnection httpURLConnection = null;
         try {
@@ -74,7 +93,7 @@ public class Request {
             wr.writeBytes("fileDescription" + "\r\n");
 
             wr.writeBytes("--" + boundary + "\r\n");
-            wr.writeBytes("Content-Disposition: form-data; name=\"files\"; filename=\"" + "image.jpg" + "\"\r\n\r\n");
+            wr.writeBytes("Content-Disposition: form-data; name=\"file\"; filename=\"" + "image.jpg" + "\"\r\n\r\n");
             wr.write(postData);
             wr.writeBytes("\r\n");
             wr.writeBytes("--" + boundary + "--\r\n");

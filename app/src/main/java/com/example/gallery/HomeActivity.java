@@ -10,7 +10,6 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -23,22 +22,10 @@ import com.example.gallery.services.Request;
 import com.google.android.material.bottomnavigation.BottomNavigationItemView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.UUID;
 
 
 public class HomeActivity extends AppCompatActivity {
@@ -144,7 +131,7 @@ public class HomeActivity extends AppCompatActivity {
                 byte[] inputData = getBytes(iStream);
                 UploadsTask uploadsTask = new UploadsTask();
                 uploadsTask.setPostData(inputData);
-                uploadsTask.execute("/admin/uploads");
+                uploadsTask.execute();
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
@@ -193,7 +180,7 @@ public class HomeActivity extends AppCompatActivity {
         @Override
         protected String doInBackground(String... params) {
             Request request = new Request(HomeActivity.this);
-            String data = request.doUpload(params[0],postData);
+            String data = request.doUpload(postData);
             return data;
         }
 

@@ -1,5 +1,6 @@
 package com.example.gallery;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,19 +22,23 @@ import java.net.URL;
 public class MainActivity extends AppCompatActivity {
     private Button continueLogin, googleLogin;
     private EditText editTextEmailAddress;
+    private TextView textViewRegister;
     ImageView image;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
+
         continueLogin = (Button) findViewById(R.id.continueLogin);
         googleLogin = (Button) findViewById(R.id.googleLogin);
-
         editTextEmailAddress = (EditText) findViewById(R.id.editTextEmailAddress);
+        textViewRegister = (TextView) findViewById(R.id.textViewRegister);
 
         Intent loginIntent = new Intent(this,LoginActivity.class);
         Intent homeIntent = new Intent(this,HomeActivity.class);
 
+        image = (ImageView) findViewById(R.id.imageView);
+        new MyImgTask().execute("https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg");
         continueLogin.setOnClickListener(
             new View.OnClickListener()
             {
@@ -44,15 +50,21 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         googleLogin.setOnClickListener(
-                new View.OnClickListener()
+            new View.OnClickListener()
+            {
+                public void onClick(View view)
                 {
-                    public void onClick(View view)
-                    {
-                        startActivity(homeIntent);
-                    }
-                });
-        image = (ImageView) findViewById(R.id.imageView);
-        new MyImgTask().execute("https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg");
+                    startActivity(homeIntent);
+                }
+            });
+        textViewRegister.setOnClickListener(
+            new View.OnClickListener()
+            {
+                public void onClick(View view)
+                {
+                    startActivity(homeIntent);
+                }
+            });
     }
     private class MyImgTask extends AsyncTask<String, Void, Bitmap> {
 
