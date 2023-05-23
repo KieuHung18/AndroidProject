@@ -1,12 +1,7 @@
 package com.example.gallery;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,8 +11,6 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.io.InputStream;
-import java.net.URL;
 
 public class MainActivity extends AppCompatActivity {
     private Button continueLogin, googleLogin;
@@ -36,9 +29,10 @@ public class MainActivity extends AppCompatActivity {
 
         Intent loginIntent = new Intent(this,LoginActivity.class);
         Intent homeIntent = new Intent(this,HomeActivity.class);
+        Intent registerIntent = new Intent(this,RegisterActivity.class);
 
         image = (ImageView) findViewById(R.id.imageView);
-        new MyImgTask().execute("https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg");
+        new ImageTask(image).execute("https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg");
         continueLogin.setOnClickListener(
             new View.OnClickListener()
             {
@@ -62,31 +56,8 @@ public class MainActivity extends AppCompatActivity {
             {
                 public void onClick(View view)
                 {
-                    startActivity(homeIntent);
+                    startActivity(registerIntent);
                 }
             });
-    }
-    private class MyImgTask extends AsyncTask<String, Void, Bitmap> {
-
-        @Override
-        protected Bitmap doInBackground(String... strings) {
-            Bitmap b=null;
-            try {
-                InputStream is = (InputStream) new URL(strings[0]).openStream();
-                b = BitmapFactory.decodeStream(is);
-            } catch (Exception e) {
-
-                e.printStackTrace();
-            }
-            return b;
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap result) {
-            super.onPostExecute(result);
-            if(result!=null){
-                image.setImageBitmap(result);
-            }
-        }
     }
 }

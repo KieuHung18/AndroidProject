@@ -2,15 +2,14 @@
 <androidx.constraintlayout.widget.ConstraintLayout
 xmlns:app="http://schemas.android.com/apk/res-auto"
 xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
 android:layout_height="match_parent"
 >
 
     <FrameLayout
         android:id="@+id/content"
-        android:layout_width="409dp"
-        android:layout_height="654dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 

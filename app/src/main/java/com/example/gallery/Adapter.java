@@ -2,9 +2,6 @@ package com.example.gallery;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,8 +9,6 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.io.InputStream;
-import java.net.URL;
 import java.util.ArrayList;
 
 // Extends the Adapter class to RecyclerView.Adapter
@@ -61,34 +56,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
         }
 
         public void setUrl(String url) {
-            new MyImgTask().execute(url);
-        }
-
-        private class MyImgTask extends AsyncTask<String, Void, Bitmap> {
-
-            @Override
-            protected Bitmap doInBackground(String... strings) {
-                Bitmap b=null;
-                try {
-                    InputStream is = (InputStream) new URL(strings[0]).openStream();
-                    b = BitmapFactory.decodeStream(is);
-                } catch (Exception e) {
-
-                    e.printStackTrace();
-                }
-                return b;
-            }
-
-            @Override
-            protected void onPostExecute(Bitmap result) {
-                super.onPostExecute(result);
-                if(result!=null){
-                    images.setImageBitmap(result);
-                }
-            }
+            new ImageTask(images).execute(url);
         }
     }
-
-
-
 }

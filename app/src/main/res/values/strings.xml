@@ -15,4 +15,5 @@
     <string name="lastNameHint">
         <font size="14"> <b>Last name</b></font>
     </string>
+
 </resources>

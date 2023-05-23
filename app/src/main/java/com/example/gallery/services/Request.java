@@ -8,19 +8,16 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.DataOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.ProtocolException;
 import java.net.URL;
 import java.util.UUID;
 
 public class Request {
 
     private static String localhost = "http://172.24.179.73:3001";
-
-    //            "http://10.0.2.2:3001";
+//    "http://10.0.2.2:3001"
     private String host = "https://kieuhung18-info.onrender.com";
     public static final String  BACKEND_URL=localhost;
     private String authentication;
@@ -71,11 +68,42 @@ public class Request {
     };
 
     public JSONObject doGet(String url){
+        url=BACKEND_URL+url;
+        String data = "";
+        HttpURLConnection httpURLConnection = null;
+        try {
+            httpURLConnection = (HttpURLConnection) new URL(url).openConnection();
+            httpURLConnection.setConnectTimeout(5000);
+            httpURLConnection.setRequestMethod("GET");
+            httpURLConnection.setRequestProperty("authentication", authentication);
 
-        return null;
+            InputStream in = httpURLConnection.getInputStream();
+            InputStreamReader inputStreamReader = new InputStreamReader(in);
+
+            int inputStreamData = inputStreamReader.read();
+            while (inputStreamData != -1) {
+                char current = (char) inputStreamData;
+                data += current;
+                inputStreamData = inputStreamReader.read();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (httpURLConnection != null) {
+                httpURLConnection.disconnect();
+            }
+        }
+
+        JSONObject response = null;
+        try {
+            response = new JSONObject(data);
+        } catch (JSONException e) {
+            Log.e("Request", "doPost: "+e.getMessage() );
+        }
+        return response;
     };
 
-    public String doUpload(byte[] postData){
+    public JSONObject doUpload(byte[] postData){
         //implements file name, file description
         String url=BACKEND_URL+"/upload";
         String data = "";
@@ -116,7 +144,13 @@ public class Request {
                 httpURLConnection.disconnect();
             }
         }
-        return data;
+        JSONObject response = null;
+        try {
+            response = new JSONObject(data);
+        } catch (JSONException e) {
+            Log.e("Request", "doPost: "+e.getMessage() );
+        }
+        return response;
     };
 
 }

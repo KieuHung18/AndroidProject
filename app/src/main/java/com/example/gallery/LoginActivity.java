@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -37,8 +38,6 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 JSONObject postData = new JSONObject();
                 try {
-//                    postData.put("email", "kieuhungcm2015@gmail.com");
-//                    postData.put("password", "123456");
                     postData.put("email", email.getText().toString());
                     postData.put("password", password.getText().toString());
                     new LoginTask().execute("/admin/auth/login", postData.toString());
@@ -77,10 +76,9 @@ public class LoginActivity extends AppCompatActivity {
                 Ed.commit();
                 finish();
                 startActivity(new Intent(LoginActivity.this,HomeActivity.class));
-            } catch (JSONException e) {
-                new AlertMessage(LoginActivity.this).show(
-                    new HandleRequestError().handle(result).getMessage()
-                );
+            } catch (Exception e) {
+                String errorMessage = new HandleRequestError().handle(result).getMessage();
+                Toast.makeText(getApplicationContext(),errorMessage,Toast.LENGTH_SHORT).show();
             }
         }
     }
