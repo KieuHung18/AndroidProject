@@ -58,6 +58,8 @@ public class MainActivity extends AppCompatActivity {
                 {
                     startActivity(registerIntent);
                 }
+
             });
+
     }
 }

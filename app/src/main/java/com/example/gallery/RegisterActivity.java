@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -30,7 +29,7 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.register_activity);
 
         register = (Button) findViewById(R.id.register);
-        close = (ImageButton) findViewById(R.id.close);
+        close = (ImageButton) findViewById(R.id.artworkDetailOption);
 
         editTextEmail = (EditText) findViewById(R.id.editTextEmailAddress);
         editTextPassword = (EditText) findViewById(R.id.editTextPassword);

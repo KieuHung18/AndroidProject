@@ -10,7 +10,7 @@ import java.net.URL;
 
 public class ImageTask extends AsyncTask<String, Void, Bitmap> {
     private ImageView image;
-    ImageTask(ImageView image){
+    public ImageTask(ImageView image){
         this.image=image;
     }
     @Override

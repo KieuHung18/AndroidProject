@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -27,7 +26,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_activity);
-        close = (ImageButton) findViewById(R.id.close);
+        close = (ImageButton) findViewById(R.id.artworkDetailOption);
         login = (Button) findViewById(R.id.login);
         email = (EditText) findViewById(R.id.editTextEmailAddress);
         password = (EditText) findViewById(R.id.editTextPassword);
@@ -44,7 +43,6 @@ public class LoginActivity extends AppCompatActivity {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
             }
         });
         close.setOnClickListener(

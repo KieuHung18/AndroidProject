@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
+
+            <ImageButton
+                android:id="@+id/artworkDetailBack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:backgroundTint="#00910909"
+                app:srcCompat="@drawable/arrow_back" />
+
+            <ImageButton
+                android:layout_gravity="right"
+                android:id="@+id/artworkDetailOption"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:backgroundTint="#00910909"
+                app:srcCompat="@drawable/three_dot" />
+
+        </FrameLayout>
+
+    </LinearLayout>
+
+    <ImageView
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="true"
+        android:id="@+id/imageViewArtworkDetail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/image"
+        tools:layout_editor_absoluteX="182dp" />
+
+    <TextView
+        android:id="@+id/textViewArtworkTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Artwork title" />
+
+    <TextView
+        android:id="@+id/textViewArtworkDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Artwork description" />
+
+    <ImageButton
+        android:id="@+id/imageButtonFavorite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/favorite" />
+
+</LinearLayout>

@@ -85,4 +85,7 @@ public class HomeActivity extends AppCompatActivity {
         fragmentTransaction.commit(); // save the changes
     }
 
+    public Fragment getProfileFragment() {
+        return profileFragment;
+    }
 }

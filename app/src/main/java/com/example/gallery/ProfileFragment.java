@@ -1,5 +1,6 @@
 package com.example.gallery;
 
+
 import android.app.Fragment;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -18,9 +19,11 @@ import com.example.gallery.services.Request;
 
 import org.json.JSONObject;
 
+
 public class ProfileFragment extends Fragment {
     private View view ;
     private ImageButton setttings;
+    private ImageView profileImage;
     private TextView textViewFollowers,textViewFollowing,textViewUserName,textViewEmail;
     private Fragment settingsFragment;
     ImageView image;
@@ -36,6 +39,7 @@ public class ProfileFragment extends Fragment {
         textViewUserName = view.findViewById(R.id.textViewUserName);
         textViewEmail = view.findViewById(R.id.textViewEmail);
         setttings = view.findViewById(R.id.settings);
+        profileImage = (ImageView)view.findViewById(R.id.imageViewProfile);
 
         setttings.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -49,15 +53,21 @@ public class ProfileFragment extends Fragment {
         return view;
     }
 
-    public ImageButton getSettingsButton() {
-        return setttings;
-    }
-
     private class GetUserInfoTask extends AsyncTask<String, Void, JSONObject> {
+        private boolean refresh;
+
+        public void setRefresh(boolean refresh) {
+            this.refresh = refresh;
+        }
+
         @Override
         protected JSONObject doInBackground(String... params) {
             Request request = new Request(getActivity());
-            return request.doGet(params[0]);
+            if(refresh){
+                return request.doPost(params[0],"");
+            }else {
+                return request.doGet(params[0]);
+            }
         }
 
         @Override
@@ -66,6 +76,10 @@ public class ProfileFragment extends Fragment {
                 JSONObject response = result.getJSONObject("response");
                 textViewUserName.setText(response.getString("firstName")+" "+response.getString("lastName"));
                 textViewEmail.setText(response.getString("email"));
+                String profileUrl=response.getString("profileUrl");
+                if(!profileUrl.equals("null")){
+                    new ImageTask(profileImage).execute(profileUrl);
+                }
             } catch (Exception e) {
                 String errorMessage = new HandleRequestError().handle(result).getMessage();
                 Toast.makeText(getActivity() ,errorMessage,Toast.LENGTH_SHORT).show();

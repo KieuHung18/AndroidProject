@@ -25,6 +25,9 @@
     <style name="RoundedImage">
         <item name="cornerSize">20dp</item>
     </style>
+    <style name="CircleImage">
+        <item name="cornerSize">50%</item>
+    </style>
 
     <style name="RoundedInput">
         <item name="android:padding">14dp</item>

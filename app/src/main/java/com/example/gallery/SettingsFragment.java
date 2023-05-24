@@ -14,7 +14,7 @@ import androidx.annotation.Nullable;
 public class SettingsFragment extends Fragment {
     private View view;
     private ImageButton back;
-    private TextView logout;
+    private TextView logout,publicProfile;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -22,16 +22,33 @@ public class SettingsFragment extends Fragment {
 
         back = (ImageButton) view.findViewById(R.id.back);
         logout = (TextView) view.findViewById(R.id.textViewLogout);
+        publicProfile = (TextView) view.findViewById(R.id.textViewPublicProfile);
 
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 getActivity().getSharedPreferences("Login", 0).edit().remove("authentication");
                 getActivity().finish();
-                new Intent(getActivity(),MainActivity.class);
+                Intent homeIntent = new Intent(getActivity(),MainActivity.class);
+                startActivity(homeIntent);
             }
         });
+        publicProfile.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent EditPublicProfileIntent = new Intent(getActivity(),EditPublicProfileActivity.class);
+                        startActivity(EditPublicProfileIntent);
+                    }
+                }
+        );
 
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((HomeActivity)getActivity()).loadFragment(((HomeActivity)getActivity()).getProfileFragment());
+            }
+        });
 
         return view;
     }

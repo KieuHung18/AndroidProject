@@ -1,14 +1,11 @@
 package com.example.gallery;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -38,7 +35,7 @@ public class AddArtworkActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_artwork_activity);
 
-        artwork = (ImageView) findViewById(R.id.imageViewArtwork);
+        artwork = (ImageView) findViewById(R.id.imageViewArtworkDetail);
         add= (Button) findViewById(R.id.add);
         name = (EditText) findViewById(R.id.editTextArtworkTitle);
         description = (EditText) findViewById(R.id.editTextArtworkDescription);
@@ -153,6 +150,5 @@ public class AddArtworkActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(),errorMessage,Toast.LENGTH_SHORT).show();
             }
         }
-
     }
 }
