@@ -1,6 +1,7 @@
 package com.example.gallery;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -16,7 +17,10 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.gallery.entities.User;
 import com.example.gallery.services.Request;
+import com.example.gallery.task.ImageTask;
+import com.example.gallery.task.UserInfoTask;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -41,7 +45,6 @@ public class EditPublicProfileActivity extends AppCompatActivity {
         editTextFirstName = findViewById(R.id.editTextFirstName);
         editTextLastName = findViewById(R.id.editTextLastName);
         profileImage = findViewById(R.id.imageViewProfile);
-
         profileImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -73,7 +76,10 @@ public class EditPublicProfileActivity extends AppCompatActivity {
                 }
             }
         });
-        new GetUserInfoTask().execute("/auth/");
+        User user = new UserInfoTask(getApplicationContext()).getUser();
+        editTextFirstName.setText(user.getFirstName());
+        editTextLastName.setText(user.getLastName());
+        new ImageTask(profileImage).execute(user.getProfileUrl());
     }
     public void getImageFromAlbum() {
         try {
@@ -149,30 +155,6 @@ public class EditPublicProfileActivity extends AppCompatActivity {
             }
         }
     }
-    private class GetUserInfoTask extends AsyncTask<String, Void, JSONObject> {
-
-        @Override
-        protected JSONObject doInBackground(String... params) {
-            Request request = new Request(EditPublicProfileActivity.this);
-            return request.doGet(params[0]);
-        }
-
-        @Override
-        protected void onPostExecute(JSONObject result) {
-            try {
-                JSONObject response = result.getJSONObject("response");
-                editTextFirstName.setText(response.getString("firstName"));
-                editTextLastName.setText(response.getString("lastName"));
-                String profileUrl=response.getString("profileUrl");
-                if(!profileUrl.equals("null")){
-                    new ImageTask(profileImage).execute(profileUrl);
-                }
-            } catch (Exception e) {
-                String errorMessage = new HandleRequestError().handle(result).getMessage();
-                Toast.makeText(EditPublicProfileActivity.this ,errorMessage,Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
     private class PostUserInfoTask extends AsyncTask<String, Void, JSONObject> {
         @Override
         protected JSONObject doInBackground(String... params) {
@@ -182,11 +164,12 @@ public class EditPublicProfileActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(JSONObject result) {
-
             try {
+                new UserInfoTask(EditPublicProfileActivity.this).execute();
                 String response = result.getString("response");
                 Toast.makeText(EditPublicProfileActivity.this ,response,Toast.LENGTH_SHORT).show();
             } catch (Exception e) {
+                e.printStackTrace();
                 String errorMessage = new HandleRequestError().handle(result).getMessage();
                 Toast.makeText(EditPublicProfileActivity.this ,errorMessage,Toast.LENGTH_SHORT).show();
             }

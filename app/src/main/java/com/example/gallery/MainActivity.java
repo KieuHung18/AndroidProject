@@ -11,6 +11,9 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.gallery.services.Request;
+import com.example.gallery.task.ImageTask;
+
 
 public class MainActivity extends AppCompatActivity {
     private Button continueLogin, googleLogin;
@@ -32,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         Intent registerIntent = new Intent(this,RegisterActivity.class);
 
         image = (ImageView) findViewById(R.id.imageView);
-        new ImageTask(image).execute("https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg");
+//        new ImageTask(image).execute("https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg");
         continueLogin.setOnClickListener(
             new View.OnClickListener()
             {

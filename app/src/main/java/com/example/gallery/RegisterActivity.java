@@ -14,6 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.gallery.services.Request;
+import com.example.gallery.task.UserInfoTask;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -87,13 +88,16 @@ public class RegisterActivity extends AppCompatActivity {
         protected void onPostExecute(JSONObject result) {
             try {
                 String response = result.getString("response");
-                SharedPreferences pref = getApplicationContext().getSharedPreferences("Login", MODE_PRIVATE);
-                SharedPreferences.Editor Ed=pref.edit();
+                SharedPreferences pref = getApplicationContext().getSharedPreferences("Authentication", MODE_PRIVATE);
+                SharedPreferences.Editor Ed = pref.edit();
                 Ed.putString("authentication",response );
                 Ed.commit();
+
+                new UserInfoTask(RegisterActivity.this).execute();
                 finish();
                 startActivity(new Intent(RegisterActivity.this,HomeActivity.class));
             } catch ( Exception e) {
+                e.printStackTrace();
                 String errorMessage = new HandleRequestError().handle(result).getMessage();
                 Toast.makeText(getApplicationContext(),errorMessage,Toast.LENGTH_SHORT).show();
             }

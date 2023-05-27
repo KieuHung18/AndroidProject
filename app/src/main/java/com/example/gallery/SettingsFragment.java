@@ -46,7 +46,7 @@ public class SettingsFragment extends Fragment {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((HomeActivity)getActivity()).loadFragment(((HomeActivity)getActivity()).getProfileFragment());
+                ((HomeActivity)getActivity()).loadFragment(new ProfileFragment());
             }
         });
 

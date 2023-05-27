@@ -16,9 +16,9 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 
 public class HomeActivity extends AppCompatActivity {
-    private Fragment imageListFragment, profileFragment,settingsFragment;
     private BottomNavigationView navigationView;
     private BottomNavigationItemView home, add, message, profile, search;
+    private Fragment initFragment ;
     private Intent addArtworkIntent;
 
     @SuppressLint("ClickableViewAccessibility")
@@ -26,10 +26,6 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home_fragment);
-
-        imageListFragment = new ImageListFragment();
-        profileFragment = new ProfileFragment();
-        settingsFragment = new SettingsFragment();
 
         addArtworkIntent = new Intent(this,AddArtworkActivity.class);
 
@@ -40,19 +36,21 @@ public class HomeActivity extends AppCompatActivity {
         search = (BottomNavigationItemView) navigationView.findViewById(R.id.search);
         message = (BottomNavigationItemView) navigationView.findViewById(R.id.message);
         profile = (BottomNavigationItemView) navigationView.findViewById(R.id.profile);
-        loadFragment(imageListFragment);
+        if(initFragment==null){
+            loadFragment(new ImageListFragment());
+        }
 
         home.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                loadFragment(imageListFragment);
+                loadFragment(new ImageListFragment());
                 return false;
             }
         });
         profile.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                loadFragment(profileFragment);
+                loadFragment(new ProfileFragment());
                 return false;
             }
         });
@@ -60,7 +58,6 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 startActivity(addArtworkIntent);
-
             }
         });
 
@@ -78,14 +75,15 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
     }
+
+    public void setInitFragment(Fragment initFragment) {
+        this.initFragment = initFragment;
+    }
+
     public void loadFragment(Fragment fragment) {
         FragmentManager fm = getFragmentManager();
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
         fragmentTransaction.replace(R.id.content, fragment, null);
         fragmentTransaction.commit(); // save the changes
-    }
-
-    public Fragment getProfileFragment() {
-        return profileFragment;
     }
 }

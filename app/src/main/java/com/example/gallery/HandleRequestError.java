@@ -12,12 +12,12 @@ public class HandleRequestError {
             String name = error.getString("name");
             String message = error.getString("message");
             return new Error(name,message);
-        } catch (JSONException e) {
+        } catch (Exception e) {
             Log.e("HandleRequestError", "handle: "+e.getMessage() );
             return new Error("JSONException",e.getMessage());
         }
     }
-    class Error{
+    public class Error{
         private String name;
         private String message;
         Error(String name, String message){

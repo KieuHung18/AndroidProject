@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,7 +16,9 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.gallery.entities.Artwork;
 import com.example.gallery.services.Request;
+import com.example.gallery.task.ImageTask;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,29 +28,54 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class AddArtworkActivity extends AppCompatActivity {
-    private ImageView artwork;
+    private ImageView artworkImage;
     private EditText name,description;
     private Button add;
-
     private byte[] imageData;
+    private Artwork postedArtwork;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_artwork_activity);
 
-        artwork = (ImageView) findViewById(R.id.imageViewArtworkDetail);
+        Artwork artwork = (Artwork) getIntent().getSerializableExtra("artwork");
+
+        artworkImage = (ImageView) findViewById(R.id.imageViewArtworkDetail);
         add= (Button) findViewById(R.id.add);
         name = (EditText) findViewById(R.id.editTextArtworkTitle);
         description = (EditText) findViewById(R.id.editTextArtworkDescription);
 
-        getImageFromAlbum();
+        if(artwork==null){
+            getImageFromAlbum();
+        }else{
+            new ImageTask(artworkImage).execute(artwork.getUrl());
+            name.setText(artwork.getName());
+            description.setText(artwork.getDescription());
+            add.setText("Save");
+
+        }
 
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                UploadsTask uploadsTask = new UploadsTask();
-                uploadsTask.setPostData(imageData);
-                uploadsTask.execute();
+                if(artwork==null){
+                    if(imageData != null){
+                        UploadsTask uploadsTask = new UploadsTask();
+                        uploadsTask.setPostData(imageData);
+                        uploadsTask.execute();
+                    }else{
+                        Toast.makeText(getApplicationContext(),"No image",Toast.LENGTH_SHORT).show();
+                    }
+                }else {
+                    JSONObject postData = new JSONObject();
+                    try {
+                        postData.put("name", name.getText().toString());
+                        postData.put("description", description.getText().toString());
+                        new ArtworkTask().execute("/users/artworks/" + artwork.getId(), postData.toString());
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
         });
 
@@ -70,7 +98,7 @@ public class AddArtworkActivity extends AppCompatActivity {
             InputStream iStream = null;
             try {
                 Bitmap bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(selectedImageUri));
-                artwork.setImageBitmap(bitmap);
+                artworkImage.setImageBitmap(bitmap);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -119,19 +147,21 @@ public class AddArtworkActivity extends AppCompatActivity {
                     postData.put("description", description.getText().toString());
                     postData.put("url", uploadedImage.getString("url"));
                     postData.put("publicId", uploadedImage.getString("publicId"));
+                    postData.put("publish", true);
 
-                    new AddArtworkTask().execute("/users/artworks", postData.toString());
+                    new ArtworkTask().execute("/users/artworks", postData.toString());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             } catch (Exception e) {
+                e.printStackTrace();
                 String errorMessage = new HandleRequestError().handle(result).getMessage();
                 Toast.makeText(getApplicationContext(),errorMessage,Toast.LENGTH_SHORT).show();
             }
         }
     }
 
-    private class AddArtworkTask extends AsyncTask<String, Void, JSONObject> {
+    private class ArtworkTask extends AsyncTask<String, Void, JSONObject> {
         @Override
         protected JSONObject doInBackground(String... params) {
             Request request = new Request(AddArtworkActivity.this);
@@ -143,9 +173,10 @@ public class AddArtworkActivity extends AppCompatActivity {
         protected void onPostExecute(JSONObject result) {
             super.onPostExecute(result);
             try {
-                String response = result.getString("response");
-                Toast.makeText(getApplicationContext(),response,Toast.LENGTH_SHORT).show();
+                JSONObject response = result.getJSONObject("response");
+                finish();
             } catch (Exception e) {
+                e.printStackTrace();
                 String errorMessage = new HandleRequestError().handle(result).getMessage();
                 Toast.makeText(getApplicationContext(),errorMessage,Toast.LENGTH_SHORT).show();
             }

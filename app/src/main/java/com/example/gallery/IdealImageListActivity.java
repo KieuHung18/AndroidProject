@@ -1,21 +1,21 @@
 package com.example.gallery;
 
-import android.app.Fragment;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.example.gallery.addapter.StaggeredGridAdapter;
 import com.example.gallery.entities.Artwork;
+import com.example.gallery.entities.Ideal;
 import com.example.gallery.services.Request;
 
 import org.json.JSONArray;
@@ -23,42 +23,62 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class ImageListFragment extends Fragment {
-    private View view;
+public class IdealImageListActivity extends AppCompatActivity {
     private ArrayList<Artwork> artworks;
     private RecyclerView recyclerView;
     private StaggeredGridAdapter staggeredGridAdapter;
+    private TextView idealName;
+    ImageButton back,option;
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.image_list_fragment, container, false);
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.ideal_image_list_activity);
+
+        Ideal ideal = (Ideal) getIntent().getSerializableExtra("ideal");
         artworks = new ArrayList<Artwork>();
 
         // Getting reference of recyclerView
-        recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        idealName= findViewById(R.id.textviewIdeal);
+        back= findViewById(R.id.idealDetailBack);
+        option= findViewById(R.id.idealDetailOption);
 
         // Setting the layout as Staggered Grid for vertical orientation
         StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(staggeredGridLayoutManager);
 
         // Sending reference and data to Adapter
-        staggeredGridAdapter = new StaggeredGridAdapter(this.getActivity(), artworks);
+        staggeredGridAdapter = new StaggeredGridAdapter(this, artworks);
+        staggeredGridAdapter.setIdeal(ideal);
         // Setting Adapter to RecyclerView
         recyclerView.setAdapter(staggeredGridAdapter);
-        new GetArtworkTask().execute("/artworks");
-        return view;
+        idealName.setText(ideal.getName());
+
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+        option.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+        if(ideal.getId()==null){
+            new GetArtworkTask().execute("/users/artworks");
+        }
+        else {
+            new GetArtworkTask().execute("/users/ideals/artworks/"+ideal.getId());
+        }
     }
     private class GetArtworkTask extends AsyncTask<String, Void, JSONObject> {
         @Override
         protected JSONObject doInBackground(String... params) {
-            try {
-                Request request = new Request(getActivity());
-                return request.doGet(params[0]);
-            }catch(Exception e){
-                e.printStackTrace();
-                return null;
-            }
-
+            Request request = new Request(IdealImageListActivity.this);
+            return request.doGet(params[0]);
         }
 
         @Override
@@ -91,9 +111,7 @@ public class ImageListFragment extends Fragment {
                 recyclerView.setAdapter(staggeredGridAdapter);
             } catch (Exception e) {
                 String errorMessage = new HandleRequestError().handle(result).getMessage();
-                if(getActivity()!=null){
-                    Toast.makeText(getActivity() ,errorMessage,Toast.LENGTH_SHORT).show();
-                }
+                Toast.makeText(IdealImageListActivity.this,errorMessage,Toast.LENGTH_SHORT).show();
             }
         }
     }

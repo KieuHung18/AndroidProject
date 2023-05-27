@@ -1,8 +1,9 @@
 package com.example.gallery.entities;
 
-public class Artwork {
-    private String id,url,publicId,name,description;
-    private int like;
+import java.io.Serializable;
+
+public class Artwork implements Serializable {
+    private String id,url,publicId,name,description,userId;
     private boolean publish;
 
     public String getId() {
@@ -29,14 +30,6 @@ public class Artwork {
         this.publicId = publicId;
     }
 
-    public int getLike() {
-        return like;
-    }
-
-    public void setLike(int like) {
-        this.like = like;
-    }
-
     public String getName() {
         return name;
     }
@@ -61,6 +54,14 @@ public class Artwork {
         this.publish = publish;
     }
 
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
     @Override
     public String toString() {
         return "Artwork{" +
@@ -69,7 +70,7 @@ public class Artwork {
                 ", publicId='" + publicId + '\'' +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
-                ", like=" + like +
+                ", userId='" + userId + '\'' +
                 ", publish=" + publish +
                 '}';
     }

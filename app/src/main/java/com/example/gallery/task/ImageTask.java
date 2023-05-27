@@ -1,4 +1,4 @@
-package com.example.gallery;
+package com.example.gallery.task;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

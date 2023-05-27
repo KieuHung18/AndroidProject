@@ -22,7 +22,7 @@ public class Request {
     public static final String  BACKEND_URL=localhost;
     private String authentication;
     public Request(Context context){
-        SharedPreferences pref = context.getSharedPreferences("Login", 0);
+        SharedPreferences pref = context.getSharedPreferences("Authentication", 0);
         authentication = pref.getString("authentication", null);
     }
     public JSONObject doPost(String url, String postData){
@@ -66,7 +66,47 @@ public class Request {
         return response;
 
     };
+    public JSONObject doDelete(String url, String postData){
+        url=BACKEND_URL+url;
+        String data = "";
+        HttpURLConnection httpURLConnection = null;
+        try {
+            httpURLConnection = (HttpURLConnection) new URL(url).openConnection();
+            httpURLConnection.setConnectTimeout(5000);
+            httpURLConnection.setRequestMethod("DELETE");
+            httpURLConnection.setRequestProperty("Content-Type", "application/json");
+            httpURLConnection.setRequestProperty("authentication", authentication);
+            DataOutputStream wr = new DataOutputStream(httpURLConnection.getOutputStream());
+            wr.writeBytes(postData);
+            wr.flush();
+            wr.close();
 
+            InputStream in = httpURLConnection.getInputStream();
+            InputStreamReader inputStreamReader = new InputStreamReader(in);
+
+            int inputStreamData = inputStreamReader.read();
+            while (inputStreamData != -1) {
+                char current = (char) inputStreamData;
+                data += current;
+                inputStreamData = inputStreamReader.read();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (httpURLConnection != null) {
+                httpURLConnection.disconnect();
+            }
+        }
+
+        JSONObject response = null;
+        try {
+            response = new JSONObject(data);
+        } catch (JSONException e) {
+            Log.e("Request", "doPost: "+e.getMessage() );
+        }
+        return response;
+
+    };
     public JSONObject doGet(String url){
         url=BACKEND_URL+url;
         String data = "";
@@ -75,6 +115,41 @@ public class Request {
             httpURLConnection = (HttpURLConnection) new URL(url).openConnection();
             httpURLConnection.setConnectTimeout(5000);
             httpURLConnection.setRequestMethod("GET");
+            httpURLConnection.setRequestProperty("authentication", authentication);
+
+            InputStream in = httpURLConnection.getInputStream();
+            InputStreamReader inputStreamReader = new InputStreamReader(in);
+
+            int inputStreamData = inputStreamReader.read();
+            while (inputStreamData != -1) {
+                char current = (char) inputStreamData;
+                data += current;
+                inputStreamData = inputStreamReader.read();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (httpURLConnection != null) {
+                httpURLConnection.disconnect();
+            }
+        }
+
+        JSONObject response = null;
+        try {
+            response = new JSONObject(data);
+        } catch (JSONException e) {
+            Log.e("Request", "doGet: "+e.getMessage() );
+        }
+        return response;
+    };
+    public JSONObject doDelete(String url){
+        url=BACKEND_URL+url;
+        String data = "";
+        HttpURLConnection httpURLConnection = null;
+        try {
+            httpURLConnection = (HttpURLConnection) new URL(url).openConnection();
+            httpURLConnection.setConnectTimeout(5000);
+            httpURLConnection.setRequestMethod("DELETE");
             httpURLConnection.setRequestProperty("authentication", authentication);
 
             InputStream in = httpURLConnection.getInputStream();
@@ -148,7 +223,7 @@ public class Request {
         try {
             response = new JSONObject(data);
         } catch (JSONException e) {
-            Log.e("Request", "doPost: "+e.getMessage() );
+            Log.e("Request", "doUpload: "+e.getMessage() );
         }
         return response;
     };

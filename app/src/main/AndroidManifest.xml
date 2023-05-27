@@ -12,7 +12,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Gallery"
         tools:targetApi="31" >
+        <activity android:name=".ArtworkDetailActivity"></activity>
+        <activity android:name=".ListIdealActivity"></activity>
+        <activity android:name=".IdealImageListActivity"></activity>
         <activity android:name=".EditPublicProfileActivity"></activity>
+        <activity android:name=".AddIdealActivity"></activity>
         <activity android:name=".AddArtworkActivity"></activity>
         <activity android:name=".LoginActivity"></activity>
         <activity android:name=".HomeActivity"></activity>

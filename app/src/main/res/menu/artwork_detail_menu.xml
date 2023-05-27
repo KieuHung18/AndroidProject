@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/editArtWork"
+        android:title="Edit artwork" />
+
+    <item
+        android:id="@+id/reportArtwork"
+        android:title="Report artwork"/>
+
+    <item
+        android:id="@+id/addToIdeal"
+        android:title="Add to ideal"/>
+    <item
+        android:id="@+id/removeFromIdeal"
+        android:title="Remove from ideal"/>
+    <item
+        android:id="@+id/hideArtWork"
+        android:title="Hide artwork"/>
+    <item
+        android:id="@+id/publishArtWork"
+        android:title="Publish artwork"/>
+    <item
+        android:id="@+id/deleteArtWork"
+        android:title="Delete artwork"/>
+
+
+</menu>

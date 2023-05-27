@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="28dp"
+        android:orientation="horizontal">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageButton
+                android:id="@+id/addIdealBack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:backgroundTint="#00910909"
+                app:srcCompat="@drawable/arrow_back" />
+
+            <Button
+                android:id="@+id/addIdealDone"
+                style="@style/RoundedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:text="Done"
+                android:textColor="@color/black"
+                app:backgroundTint="@color/neutral_100" />
+
+            <TextView
+                android:id="@+id/textviewAddIdeal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:text="Create Ideal"
+                android:textStyle="bold" />
+
+        </FrameLayout>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textViewAddIdealName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Ideal name" />
+
+    <EditText
+        android:id="@+id/editTextIdealTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Add a title"
+        android:textStyle="bold"
+        android:textSize="24dp"
+        />
+
+    <Switch
+        android:id="@+id/switchPublish"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:textSize="24dp"
+        android:text="Publish" />
+
+</LinearLayout>
