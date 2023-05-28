@@ -21,7 +21,7 @@ public class UserInfoTask extends AsyncTask<String, Void, JSONObject> {
     @Override
     protected JSONObject doInBackground(String... params) {
         Request request = new Request(context);
-        return request.doGet("/auth");
+        return request.doPost("/auth","");
     }
 
     @Override

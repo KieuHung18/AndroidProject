@@ -112,7 +112,7 @@ public class ListIdealActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(JSONObject result) {
             try {
-                JSONArray response = result.getJSONArray("response");
+                JSONObject response = result.getJSONObject("response");
             } catch (Exception e) {
                 String errorMessage = new HandleRequestError().handle(result).getMessage();
                 Toast.makeText(ListIdealActivity.this ,errorMessage,Toast.LENGTH_SHORT).show();

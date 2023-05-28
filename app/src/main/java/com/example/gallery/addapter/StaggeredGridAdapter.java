@@ -65,7 +65,7 @@ public class StaggeredGridAdapter extends RecyclerView.Adapter<StaggeredGridAdap
                 public void onClick(View view) {
                     Intent artworkDetail = new Intent(activity,ArtworkDetailActivity.class);
                     artworkDetail.putExtra("artwork",artwork);
-                    if(ideal!=null){
+                    if(ideal!=null&&ideal.getId()!=null){
                         artworkDetail.putExtra("ideal",ideal);
                     }
                     activity.startActivity(artworkDetail);

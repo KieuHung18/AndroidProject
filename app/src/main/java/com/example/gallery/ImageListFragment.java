@@ -58,7 +58,6 @@ public class ImageListFragment extends Fragment {
                 e.printStackTrace();
                 return null;
             }
-
         }
 
         @Override

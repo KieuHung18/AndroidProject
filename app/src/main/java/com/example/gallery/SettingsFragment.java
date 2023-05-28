@@ -2,6 +2,7 @@ package com.example.gallery;
 
 import android.app.Fragment;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,10 +28,11 @@ public class SettingsFragment extends Fragment {
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getActivity().getSharedPreferences("Login", 0).edit().remove("authentication");
+                SharedPreferences pref = getActivity().getApplicationContext().getSharedPreferences("Authentication", 0);
+                SharedPreferences.Editor Ed = pref.edit();
+                Ed.clear();
+                Ed.commit();
                 getActivity().finish();
-                Intent homeIntent = new Intent(getActivity(),MainActivity.class);
-                startActivity(homeIntent);
             }
         });
         publicProfile.setOnClickListener(

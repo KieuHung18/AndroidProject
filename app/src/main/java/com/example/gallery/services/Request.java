@@ -17,8 +17,7 @@ import java.util.UUID;
 public class Request {
 
     private static String localhost = "http://172.24.179.73:3001";
-//    "http://10.0.2.2:3001"
-    private String host = "https://kieuhung18-info.onrender.com";
+    private static String host = "https://kieuhung18-mobile-backend.onrender.com";
     public static final String  BACKEND_URL=localhost;
     private String authentication;
     public Request(Context context){

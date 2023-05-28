@@ -4,12 +4,6 @@
         android:id="@+id/editIdeal"
         android:title="Edit ideal" />
     <item
-        android:id="@+id/hideIdeal"
-        android:title="Hide ideal"/>
-    <item
-        android:id="@+id/publishIdeal"
-        android:title="Publish artwork"/>
-    <item
         android:id="@+id/deleteIdeal"
         android:title="Delete ideal"/>
 </menu>

@@ -13,6 +13,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.gallery.entities.Ideal;
 import com.example.gallery.services.Request;
 
 import org.json.JSONException;
@@ -27,12 +28,23 @@ public class AddIdealActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Ideal ideal = (Ideal) getIntent().getSerializableExtra("ideal");
         setContentView(R.layout.add_ideal_acrivity);
         done = findViewById(R.id.addIdealDone);
         back = findViewById(R.id.addIdealBack);
         name = findViewById(R.id.editTextIdealTitle);
         publish = findViewById(R.id.switchPublish);
 
+        if(ideal!=null){
+            name.setText(ideal.getName());
+            publish.setChecked(ideal.isPublish());
+        }
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
         done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -41,9 +53,14 @@ public class AddIdealActivity extends AppCompatActivity {
                 }else {
                     JSONObject postData = new JSONObject();
                     try {
-                        postData.put("name", name.getText().toString());
                         postData.put("publish", publish.isChecked());
-                        new IdealTask().execute("/users/ideals",postData.toString());
+                        postData.put("name", name.getText().toString());
+                        if(ideal!=null){
+                            new IdealTask().execute("/users/ideals/"+ideal.getId(),postData.toString());
+                        }
+                        else{
+                            new IdealTask().execute("/users/ideals",postData.toString());
+                        }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

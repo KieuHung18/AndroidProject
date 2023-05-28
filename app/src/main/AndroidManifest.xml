@@ -12,6 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Gallery"
         tools:targetApi="31" >
+        <activity android:name=".ReportActivity"></activity>
         <activity android:name=".ArtworkDetailActivity"></activity>
         <activity android:name=".ListIdealActivity"></activity>
         <activity android:name=".IdealImageListActivity"></activity>

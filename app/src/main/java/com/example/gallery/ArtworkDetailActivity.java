@@ -3,7 +3,6 @@ package com.example.gallery;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
@@ -122,6 +121,11 @@ public class ArtworkDetailActivity extends AppCompatActivity {
                     case R.id.deleteArtWork:
                         new DeleteArtWorkTask().execute("/users/artworks/"+artwork.getId());
                         break;
+                    case R.id.reportArtwork:
+                        Intent report = new Intent(ArtworkDetailActivity.this,ReportActivity.class);
+                        report.putExtra("artwork",artwork);
+                        startActivity(report);
+                        break;
                 }
                 return false;
             }
@@ -139,7 +143,6 @@ public class ArtworkDetailActivity extends AppCompatActivity {
             }
         });
     }
-
     private class DeleteArtWorkTask extends AsyncTask<String, Void, JSONObject> {
         @Override
         protected JSONObject doInBackground(String... params) {
@@ -151,7 +154,6 @@ public class ArtworkDetailActivity extends AppCompatActivity {
         protected void onPostExecute(JSONObject result) {
             try {
                 JSONObject response = result.getJSONObject("response");
-                new DeleteImageTask().execute("/upload/"+response.getString("publicId"));
             } catch (Exception e) {
                 String errorMessage = new HandleRequestError().handle(result).getMessage();
                 Toast.makeText(getApplicationContext(),errorMessage,Toast.LENGTH_SHORT).show();
@@ -187,26 +189,6 @@ public class ArtworkDetailActivity extends AppCompatActivity {
         protected void onPostExecute(JSONObject result) {
             try {
                 JSONObject response = result.getJSONObject("response");
-            } catch (Exception e) {
-                String errorMessage = new HandleRequestError().handle(result).getMessage();
-                Toast.makeText(getApplicationContext(),errorMessage,Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-    private class DeleteImageTask extends AsyncTask<String, Void, JSONObject> {
-        @Override
-        protected JSONObject doInBackground(String... params) {
-            Request request = new Request(ArtworkDetailActivity.this);
-            return request.doDelete(params[0]);
-        }
-
-        @Override
-        protected void onPostExecute(JSONObject result) {
-            try {
-                JSONObject response = result.getJSONObject("response");
-                Request request = new Request(ArtworkDetailActivity.this);
-                request.doDelete("/upload/"+response.getString("publicId"));
-                finish();
             } catch (Exception e) {
                 String errorMessage = new HandleRequestError().handle(result).getMessage();
                 Toast.makeText(getApplicationContext(),errorMessage,Toast.LENGTH_SHORT).show();

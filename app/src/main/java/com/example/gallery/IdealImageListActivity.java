@@ -1,9 +1,12 @@
 package com.example.gallery;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,7 +19,9 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import com.example.gallery.addapter.StaggeredGridAdapter;
 import com.example.gallery.entities.Artwork;
 import com.example.gallery.entities.Ideal;
+import com.example.gallery.entities.User;
 import com.example.gallery.services.Request;
+import com.example.gallery.task.UserInfoTask;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -43,9 +48,12 @@ public class IdealImageListActivity extends AppCompatActivity {
         idealName= findViewById(R.id.textviewIdeal);
         back= findViewById(R.id.idealDetailBack);
         option= findViewById(R.id.idealDetailOption);
+        option = findViewById(R.id.idealDetailOption);
 
         // Setting the layout as Staggered Grid for vertical orientation
         StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL);
+        PopupMenu popupMenu = new PopupMenu(this, option);
+
         recyclerView.setLayoutManager(staggeredGridLayoutManager);
 
         // Sending reference and data to Adapter
@@ -54,6 +62,31 @@ public class IdealImageListActivity extends AppCompatActivity {
         // Setting Adapter to RecyclerView
         recyclerView.setAdapter(staggeredGridAdapter);
         idealName.setText(ideal.getName());
+
+
+        User user = new UserInfoTask(this).getUser();
+        popupMenu.getMenuInflater().inflate(R.menu.ideal_detail_menu, popupMenu.getMenu());
+
+        if(ideal.getId()==null || !ideal.getUserId().equals(user.getId())){
+            option.setVisibility(View.GONE);
+        }
+
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                switch (menuItem.getItemId()){
+                    case R.id.editIdeal:
+                        Intent addIdealIntent = new Intent(IdealImageListActivity.this,AddIdealActivity.class);
+                        addIdealIntent.putExtra("ideal",ideal);
+                        startActivity(addIdealIntent);
+                        break;
+                    case R.id.deleteIdeal:
+                        new DeleteIdealTask().execute("/users/ideals/"+ideal.getId());
+                        break;
+                }
+                return false;
+            }
+        });
 
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,8 +97,7 @@ public class IdealImageListActivity extends AppCompatActivity {
         option.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-            }
+                popupMenu.show();            }
         });
         if(ideal.getId()==null){
             new GetArtworkTask().execute("/users/artworks");
@@ -112,6 +144,24 @@ public class IdealImageListActivity extends AppCompatActivity {
             } catch (Exception e) {
                 String errorMessage = new HandleRequestError().handle(result).getMessage();
                 Toast.makeText(IdealImageListActivity.this,errorMessage,Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+    private class DeleteIdealTask extends AsyncTask<String, Void, JSONObject> {
+        @Override
+        protected JSONObject doInBackground(String... params) {
+            Request request = new Request(IdealImageListActivity.this);
+            return request.doDelete(params[0]);
+        }
+
+        @Override
+        protected void onPostExecute(JSONObject result) {
+            try {
+                JSONObject response = result.getJSONObject("response");
+                finish();
+            } catch (Exception e) {
+                String errorMessage = new HandleRequestError().handle(result).getMessage();
+                Toast.makeText(getApplicationContext(),errorMessage,Toast.LENGTH_SHORT).show();
             }
         }
     }
