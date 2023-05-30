@@ -96,7 +96,7 @@ public class IdealImageListActivity extends AppCompatActivity {
             option.setVisibility(View.GONE);
         }
         AlertDialog.Builder builder = new AlertDialog.Builder(IdealImageListActivity.this);
-        builder.setMessage("Write your message here.");
+        builder.setMessage("Do you want to delete "+ideal.getName()+" ?");
         builder.setCancelable(true);
 
         builder.setPositiveButton(
