@@ -1,7 +1,5 @@
 package com.example.gallery.entities;
 
-import com.example.gallery.AddIdealActivity;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -11,20 +9,18 @@ public class Ideal implements Serializable {
     private String id,description,name,userId,thumbnail;
     private int size;
     private boolean publish;
+
     @Override
     public String toString() {
-        JSONObject ideal = new JSONObject();
-        try {
-            ideal.put("id", id);
-            ideal.put("name", name);
-            ideal.put("publish", publish);
-            ideal.put("description", description);
-            ideal.put("thumbnail",thumbnail);
-            return ideal.toString();
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return "";
-        }
+        return "Ideal{" +
+                "id='" + id + '\'' +
+                ", description='" + description + '\'' +
+                ", name='" + name + '\'' +
+                ", userId='" + userId + '\'' +
+                ", thumbnail='" + thumbnail + '\'' +
+                ", size=" + size +
+                ", publish=" + publish +
+                '}';
     }
 
     public String getThumbnail() {

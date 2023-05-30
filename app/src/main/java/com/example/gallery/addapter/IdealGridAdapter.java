@@ -18,8 +18,8 @@ import com.example.gallery.task.ImageTask;
 
 import java.util.ArrayList;
 
-public class GridAdapter extends ArrayAdapter<Ideal> {
-    public GridAdapter(@NonNull Context context, ArrayList<Ideal> ideals) {
+public class IdealGridAdapter extends ArrayAdapter<Ideal> {
+    public IdealGridAdapter(@NonNull Context context, ArrayList<Ideal> ideals) {
         super(context, 0, ideals);
     }
     @NonNull
@@ -31,12 +31,11 @@ public class GridAdapter extends ArrayAdapter<Ideal> {
         }
         Ideal ideal = getItem(position);
         TextView title = view.findViewById(R.id.textViewIdealTitle);
-        TextView amount = view.findViewById(R.id.textViewAmountIdeal);
-        ImageView image = view.findViewById(R.id.imageViewIdealThumbnail);
-
-        amount.setText(String.valueOf(ideal.getSize()+" Artworks"));
         title.setText(ideal.getName());
-        if(!ideal.getThumbnail().equals("")){
+        TextView amount = view.findViewById(R.id.textViewAmountIdeal);
+        amount.setText(String.valueOf(ideal.getSize()+" Artworks"));
+        ImageView image = view.findViewById(R.id.imageViewIdealThumbnail);
+        if(!ideal.getThumbnail().equals("null")&&!ideal.getThumbnail().equals("")){
             new ImageTask(image).execute(ideal.getThumbnail());
         }
         return view;

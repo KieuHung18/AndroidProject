@@ -3,6 +3,7 @@ package com.example.gallery;
 import android.app.Fragment;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -28,24 +29,24 @@ public class ImageListFragment extends Fragment {
     private ArrayList<Artwork> artworks;
     private RecyclerView recyclerView;
     private StaggeredGridAdapter staggeredGridAdapter;
+    private StaggeredGridLayoutManager staggeredGridLayoutManager;
+    private String TAG = "ImageListFragment";
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.image_list_fragment, container, false);
-        artworks = new ArrayList<Artwork>();
-
         // Getting reference of recyclerView
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
+        artworks = new ArrayList<Artwork>();
 
         // Setting the layout as Staggered Grid for vertical orientation
-        StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL);
+        staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(staggeredGridLayoutManager);
-
         // Sending reference and data to Adapter
-        staggeredGridAdapter = new StaggeredGridAdapter(this.getActivity(), artworks);
+        staggeredGridAdapter = new StaggeredGridAdapter(ImageListFragment.this.getActivity(), artworks);
         // Setting Adapter to RecyclerView
         recyclerView.setAdapter(staggeredGridAdapter);
-        new GetArtworkTask().execute("/artworks");
+        new GetArtworkTask().execute("/gallery/artworks");
         return view;
     }
     private class GetArtworkTask extends AsyncTask<String, Void, JSONObject> {
@@ -65,7 +66,6 @@ public class ImageListFragment extends Fragment {
             try {
                 JSONArray response = result.getJSONArray("response");
                 String id,url,publicId,name,description,userId;
-                int like;
                 boolean publish;
                 for(int i=0;i<response.length();i++){
                     Artwork artwork = new Artwork();
@@ -86,13 +86,13 @@ public class ImageListFragment extends Fragment {
                     artwork.setUserId(userId);
                     artworks.add(artwork);
                 }
-                staggeredGridAdapter.setArtworks(artworks);
+                // Setting Adapter to RecyclerView
                 recyclerView.setAdapter(staggeredGridAdapter);
             } catch (Exception e) {
+                e.printStackTrace();
                 String errorMessage = new HandleRequestError().handle(result).getMessage();
-                if(getActivity()!=null){
-                    Toast.makeText(getActivity() ,errorMessage,Toast.LENGTH_SHORT).show();
-                }
+                Log.d(TAG, "onPostExecute: "+errorMessage);
+
             }
         }
     }

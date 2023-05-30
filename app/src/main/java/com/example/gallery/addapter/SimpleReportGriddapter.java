@@ -27,11 +27,11 @@ public class SimpleReportGriddapter extends ArrayAdapter<Report> {
             view = LayoutInflater.from(getContext()).inflate(R.layout.report_item, parent, false);
         }
 
-//        Report report = getItem(position);
-//        TextView name = view.findViewById(R.id.textViewReportName);
-//        TextView description = view.findViewById(R.id.textViewReportDescription);
-//        name.setText(report.getName());
-//        description.setText(report.getDescription());
+        Report report = getItem(position);
+        TextView name = view.findViewById(R.id.textViewReportName);
+        TextView description = view.findViewById(R.id.textViewReportDescription);
+        name.setText(report.getName());
+        description.setText(report.getDescription());
         return view;
     }
 }

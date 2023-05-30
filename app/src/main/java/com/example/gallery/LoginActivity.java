@@ -4,10 +4,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -23,6 +25,7 @@ public class LoginActivity extends AppCompatActivity {
     private ImageButton close;
     private Button login;
     private EditText email,password;
+    private TextView register;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,18 +34,31 @@ public class LoginActivity extends AppCompatActivity {
         login = (Button) findViewById(R.id.login);
         email = (EditText) findViewById(R.id.editTextEmailAddress);
         password = (EditText) findViewById(R.id.editTextPassword);
-
+        register= (TextView) findViewById(R.id.textViewRegister);
         Bundle extras = getIntent().getExtras();
-        email.setText(extras.getString("emailAddress"));
+        if(extras!=null){
+            email.setText(extras.getString("emailAddress"));
+        }
+
         login.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                JSONObject postData = new JSONObject();
-                try {
-                    postData.put("email", email.getText().toString());
-                    postData.put("password", password.getText().toString());
-                    new LoginTask().execute("/auth/login", postData.toString());
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                String userEmail = email.getText().toString();
+                String userPassword = password.getText().toString();
+                if(userEmail.equals("")){
+                    Toast.makeText(getApplicationContext(),"Email is empty",Toast.LENGTH_SHORT).show();
+                }else {
+                    if(userPassword.equals("")){
+                        Toast.makeText(getApplicationContext(),"Password is empty",Toast.LENGTH_SHORT).show();
+                    }else{
+                        JSONObject postData = new JSONObject();
+                        try {
+                            postData.put("email", userEmail);
+                            postData.put("password", userPassword);
+                            new LoginTask().execute("/auth/login", postData.toString());
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
                 }
             }
         });
@@ -55,6 +71,12 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         );
+        register.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(LoginActivity.this,RegisterActivity.class));
+            }
+        });
 
     }
 
@@ -73,13 +95,14 @@ public class LoginActivity extends AppCompatActivity {
                 SharedPreferences.Editor Ed = pref.edit();
                 Ed.putString("authentication",response );
                 Ed.commit();
-
                 new UserInfoTask(LoginActivity.this).execute();
                 finish();
                 startActivity(new Intent(LoginActivity.this,HomeActivity.class));
             } catch (Exception e) {
+                e.printStackTrace();
                 String errorMessage = new HandleRequestError().handle(result).getMessage();
-                Toast.makeText(getApplicationContext(),errorMessage,Toast.LENGTH_SHORT).show();
+                Log.d("LoginActivity", "onPostExecute: "+errorMessage);
+                Toast.makeText(getApplicationContext(),"Wrong user name or password",Toast.LENGTH_SHORT).show();
             }
         }
     }

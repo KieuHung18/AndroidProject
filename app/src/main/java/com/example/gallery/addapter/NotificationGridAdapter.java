@@ -13,28 +13,27 @@ import androidx.annotation.Nullable;
 
 import com.example.gallery.R;
 import com.example.gallery.entities.Ideal;
+import com.example.gallery.entities.Notification;
 import com.example.gallery.task.ImageTask;
 
 import java.util.ArrayList;
 
-public class SimpleIdealGriddapter extends ArrayAdapter<Ideal> {
-    public SimpleIdealGriddapter(@NonNull Context context, ArrayList<Ideal> ideals) {
-        super(context, 0, ideals);
+public class NotificationGridAdapter extends ArrayAdapter<Notification> {
+    public NotificationGridAdapter(@NonNull Context context, ArrayList<Notification> notifications) {
+        super(context, 0, notifications);
     }
     @NonNull
     @Override
     public View getView(int position, @Nullable View view, @NonNull ViewGroup parent) {
         if (view == null) {
             // Layout Inflater inflates each item to be displayed in GridView.
-            view = LayoutInflater.from(getContext()).inflate(R.layout.simple_ideal_item, parent, false);
+            view = LayoutInflater.from(getContext()).inflate(R.layout.notification_item, parent, false);
         }
-        Ideal ideal = getItem(position);
-        TextView title = view.findViewById(R.id.textViewIdealTitle);
-        ImageView image = view.findViewById(R.id.imageViewIdealThumbnail);
-        title.setText(ideal.getName());
-        if(!ideal.getThumbnail().equals("null")){
-            new ImageTask(image).execute(ideal.getThumbnail());
-        }
+        Notification notification = getItem(position);
+        TextView title = view.findViewById(R.id.textViewNotificationTitle);
+        TextView content = view.findViewById(R.id.textViewNotificationContent);
+        title.setText(notification.getTitle());
+        content.setText(notification.getContent());
         return view;
     }
 }

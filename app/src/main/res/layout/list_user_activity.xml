@@ -17,7 +17,7 @@
             android:layout_height="match_parent">
 
             <ImageButton
-                android:id="@+id/listIdealBack"
+                android:id="@+id/listUserBack"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -26,11 +26,11 @@
 
             <TextView
                 android:layout_marginHorizontal="8dp"
-                android:id="@+id/textviewAddToIdeal"
+                android:id="@+id/textviewToUser"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:text="Add to Ideal"
+                android:text="Users "
                 android:textStyle="bold" />
 
         </FrameLayout>
@@ -46,42 +46,9 @@
         app:layout_constraintTop_toBottomOf="@+id/linearLayout4">
 
         <GridView
-            android:paddingBottom="120dp"
-            android:id="@+id/idealGridView"
+            android:id="@+id/userGridView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/linearLayout2"
-        android:layout_width="match_parent"
-        android:padding="8dp"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="@color/neutral_100"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-
-        <ImageButton
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="16dp"
-            android:id="@+id/imageButtonNewIdeal"
-            android:layout_width="100dp"
-            android:layout_height="50dp"
-            app:backgroundTint="@color/primary"
-            style="@style/RoundedButton"
-            app:srcCompat="@drawable/plus" />
-
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:textSize="16dp"
-            android:textStyle="bold"
-            android:text="Create new ideal" />
-
-    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

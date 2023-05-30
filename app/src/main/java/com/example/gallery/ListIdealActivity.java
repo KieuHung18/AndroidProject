@@ -1,10 +1,13 @@
 package com.example.gallery;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -25,7 +28,15 @@ public class ListIdealActivity extends AppCompatActivity {
     private GridView gridView;
     private ArrayList<Ideal> ideals;
     private SimpleIdealGriddapter adapter;
+    private ImageButton newIdeal,back;
     private Artwork artwork;
+    private String TAG = "ListIdealActivity";
+    @Override
+    protected void onStart() {
+        super.onStart();
+        ideals = new ArrayList<>();
+        new GetIdealTask().execute("/users/ideals");
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -33,6 +44,8 @@ public class ListIdealActivity extends AppCompatActivity {
         setContentView(R.layout.list_ideal_activity);
         artwork = (Artwork) getIntent().getSerializableExtra("artwork");
         gridView = findViewById(R.id.idealGridView);
+        back= findViewById(R.id.listIdealBack);
+        newIdeal= findViewById(R.id.imageButtonNewIdeal);
         gridView.setNumColumns(1);
 
         ideals = new ArrayList<Ideal>();
@@ -48,10 +61,21 @@ public class ListIdealActivity extends AppCompatActivity {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                new AddToIdealTask().execute("/users/ideals/artworks/"+ideals.get(i).getId(),id.toString());
+                new AddToIdealTask().execute("/users/artworks/ideals/"+ideals.get(i).getId(),id.toString());
             }
         });
-        new GetIdealTask().execute("/users/ideals");
+        newIdeal.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(ListIdealActivity.this,AddIdealActivity.class));
+            }
+        });
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
     }
     private class GetIdealTask extends AsyncTask<String, Void, JSONObject> {
         @Override
@@ -113,9 +137,12 @@ public class ListIdealActivity extends AppCompatActivity {
         protected void onPostExecute(JSONObject result) {
             try {
                 JSONObject response = result.getJSONObject("response");
+                ideals = new ArrayList<>();
+                new GetIdealTask().execute("/users/ideals");
             } catch (Exception e) {
+                e.printStackTrace();
                 String errorMessage = new HandleRequestError().handle(result).getMessage();
-                Toast.makeText(ListIdealActivity.this ,errorMessage,Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "onPostExecute: "+errorMessage);
             }
         }
     }

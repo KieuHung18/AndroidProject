@@ -15,9 +15,11 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:paddingHorizontal="8dp"
             >
 
             <ImageButton
+                android:layout_gravity="center_vertical"
                 android:id="@+id/artworkDetailBack"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -45,22 +47,84 @@
         app:srcCompat="@drawable/image"
         tools:layout_editor_absoluteX="182dp" />
 
-    <TextView
-        android:id="@+id/textViewArtworkTitle"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Artwork title" />
+        android:layout_margin="16dp"
+        android:onClick="toUserProfile"
+        android:orientation="horizontal">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/imageViewUser"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            app:shapeAppearanceOverlay="@style/CircleImage"
+            app:srcCompat="@drawable/account_circle" />
+
+        <TextView
+            android:id="@+id/textViewUserName"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="5dp"
+            android:gravity="center"
+            android:text=""
+            android:textColor="@color/black"
+            android:textSize="16dp"
+            android:textStyle="bold" />
+    </LinearLayout>
 
     <TextView
+        android:layout_marginHorizontal="16dp"
+        android:id="@+id/textViewArtworkTitle"
+        android:layout_width="match_parent"
+        android:textStyle="bold"
+        android:textSize="20dp"
+        android:layout_height="wrap_content"
+        android:text="" />
+
+    <TextView
+        android:layout_marginHorizontal="16dp"
         android:id="@+id/textViewArtworkDescription"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Artwork description" />
+        android:layout_marginVertical="8dp"
+        android:textSize="16dp"
+        android:text="" />
 
-    <ImageButton
-        android:id="@+id/imageButtonFavorite"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:srcCompat="@drawable/favorite" />
+        android:layout_gravity="end"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_gravity="center_vertical"
+            android:id="@+id/imageViewLikeHearth"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:tint="@color/primary"
+            app:srcCompat="@drawable/favorite_fill" />
+
+        <TextView
+            android:id="@+id/textViewFavoriteCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginHorizontal="5dp"
+            android:text=""
+            />
+
+        <ImageButton
+            android:layout_marginRight="16dp"
+            android:id="@+id/imageButtonFavorite"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            app:backgroundTint="@color/neutral_100"
+            style="@style/RoundedButton"
+            app:srcCompat="@drawable/favorite" />
+    </LinearLayout>
 
 </LinearLayout>

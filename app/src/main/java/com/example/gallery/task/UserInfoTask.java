@@ -5,6 +5,7 @@ import static android.content.Context.MODE_PRIVATE;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.example.gallery.HandleRequestError;
@@ -18,39 +19,34 @@ public class UserInfoTask extends AsyncTask<String, Void, JSONObject> {
     public UserInfoTask(Context context){
         this.context=context;
     }
+    private String TAG ="UserInfoTask";
     @Override
     protected JSONObject doInBackground(String... params) {
         Request request = new Request(context);
-        return request.doPost("/auth","");
+        return request.doGet("/auth");
     }
 
     @Override
     protected void onPostExecute(JSONObject result) {
         try {
             JSONObject response = result.getJSONObject("response");
-            JSONObject User = response.getJSONObject("user");
-            String sessionId = response.getString("sessionId");
 
-            SharedPreferences pref = context.getSharedPreferences("Authentication", MODE_PRIVATE);
+            SharedPreferences pref = context.getSharedPreferences("User", MODE_PRIVATE);
             SharedPreferences.Editor Ed = pref.edit();
-            Ed.putString("authentication",sessionId );
-            Ed.commit();
 
-            pref = context.getSharedPreferences("User", MODE_PRIVATE);
-            Ed = pref.edit();
-
-            Ed.putString("id",User.getString("id") );
-            Ed.putString("firstName",User.getString("firstName") );
-            Ed.putString("lastName",User.getString("lastName") );
-            Ed.putString("role",User.getString("role") );
-            Ed.putString("email",User.getString("email") );
-            Ed.putString("hashPassword",User.getString("hashPassword") );
-            Ed.putString("profileUrl",User.getString("profileUrl") );
+            Ed.putString("id",response.getString("id") );
+            Ed.putString("firstName",response.getString("firstName") );
+            Ed.putString("lastName",response.getString("lastName") );
+            Ed.putString("role",response.getString("role") );
+            Ed.putString("email",response.getString("email") );
+            Ed.putString("hashPassword",response.getString("hashPassword") );
+            Ed.putString("profileUrl",response.getString("profileUrl") );
             Ed.commit();
 
         } catch (Exception e) {
+            e.printStackTrace();
             String errorMessage = new HandleRequestError().handle(result).getMessage();
-            Toast.makeText(context,errorMessage,Toast.LENGTH_SHORT).show();
+            Log.d(TAG, "onPostExecute: "+errorMessage);
         }
     }
     public User getUser(){
@@ -64,5 +60,21 @@ public class UserInfoTask extends AsyncTask<String, Void, JSONObject> {
         user.setHashPassword(pref.getString("hashPassword", null));
         user.setProfileUrl(pref.getString("profileUrl", null));
         return user;
+    }
+
+    public boolean logged(){
+        SharedPreferences pref = context.getSharedPreferences("Authentication", 0);
+        String authentication = pref.getString("authentication", null);
+        if(authentication!=null){return true;}else {return false;}
+    }
+    public void logout (){
+        SharedPreferences pref = context.getSharedPreferences("Authentication", 0);
+        SharedPreferences.Editor Ed = pref.edit();
+        Ed.clear();
+        Ed.commit();
+        pref = context.getSharedPreferences("User", 0);
+        Ed = pref.edit();
+        Ed.clear();
+        Ed.commit();
     }
 }

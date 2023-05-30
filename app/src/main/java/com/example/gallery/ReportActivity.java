@@ -44,6 +44,7 @@ public class ReportActivity extends AppCompatActivity {
                     postData.put("description", reports.get(i).getDescription());
                     postData.put("artworkId", artwork.getId());
                     new ReportArtwork().execute("/users/reports",postData.toString());
+                    finish();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -72,10 +73,9 @@ public class ReportActivity extends AppCompatActivity {
         protected void onPostExecute(JSONObject result) {
             try {
                 JSONObject response = result.getJSONObject("response");
-                Log.d("ReportActivity", "onPostExecute: "+response.toString());
             } catch (Exception e) {
                 String errorMessage = new HandleRequestError().handle(result).getMessage();
-                Toast.makeText(getApplicationContext(),errorMessage,Toast.LENGTH_SHORT).show();
+                Log.d("ReportActivity", "onPostExecute: "+errorMessage.toString());
             }
         }
     }

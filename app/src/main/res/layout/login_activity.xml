@@ -4,6 +4,7 @@
     android:orientation="vertical"
     android:gravity="center_horizontal"
     android:layout_width="match_parent"
+    android:layout_marginHorizontal="8dp"
     android:layout_height="match_parent">
 
     <LinearLayout
@@ -34,20 +35,8 @@
 
     </LinearLayout>
 
-    <Button
-        app:backgroundTint="@color/neutral_100"
-        android:id="@+id/googleLogin"
-        android:drawableLeft="@drawable/google"
-        style="@style/RoundedButton"
-        android:textColor="@color/black"
-        android:text="Continue with Google" />
 
-    <TextView
-        android:id="@+id/or"
-        android:layout_margin="30dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Or" />
+
 
     <EditText
         android:layout_marginVertical="10dp"
@@ -68,10 +57,11 @@
         style="@style/RoundedButton"
         android:text="Log in" />
     <TextView
+        android:textSize="15dp"
         android:textStyle="bold"
-        android:id="@+id/forgotPassword"
+        android:id="@+id/textViewRegister"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Forgot password" />
+        android:text="Register" />
 
 </LinearLayout>

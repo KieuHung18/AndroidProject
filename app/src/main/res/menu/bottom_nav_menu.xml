@@ -6,16 +6,11 @@
         android:icon="@drawable/home"
         />
     <item
-        android:id="@+id/search"
-        android:title="@null"
-        android:icon="@drawable/search"
-        />
-    <item
         android:id="@+id/add"
         android:title="@null"
         android:icon="@drawable/plus"/>
     <item
-        android:id="@+id/message"
+        android:id="@+id/notification"
         android:title="@null"
         android:icon="@drawable/message"/>
     <item

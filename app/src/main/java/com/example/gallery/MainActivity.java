@@ -7,16 +7,18 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.gallery.services.Request;
 import com.example.gallery.task.ImageTask;
+import com.example.gallery.task.UserInfoTask;
 
 
 public class MainActivity extends AppCompatActivity {
-    private Button continueLogin, googleLogin;
+    private Button continueLogin, continueWithoutAccount;
     private EditText editTextEmailAddress;
     private TextView textViewRegister;
     ImageView image;
@@ -24,9 +26,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
-
+        if(new UserInfoTask(this).logged()){
+            finish();
+            startActivity(new Intent(this,HomeActivity.class));
+        }
         continueLogin = (Button) findViewById(R.id.continueLogin);
-        googleLogin = (Button) findViewById(R.id.googleLogin);
+        continueWithoutAccount = (Button) findViewById(R.id.continueWithoutAccount);
         editTextEmailAddress = (EditText) findViewById(R.id.editTextEmailAddress);
         textViewRegister = (TextView) findViewById(R.id.textViewRegister);
 
@@ -42,11 +47,15 @@ public class MainActivity extends AppCompatActivity {
                 public void onClick(View view)
                 {
                     String emailAddress = editTextEmailAddress.getText().toString();
-                    loginIntent.putExtra("emailAddress",emailAddress);
-                    startActivity(loginIntent);
+                    if(!emailAddress.equals("")){
+                        loginIntent.putExtra("emailAddress",emailAddress);
+                        startActivity(loginIntent);
+                    }else{
+                        Toast.makeText(getApplicationContext(),"Please enter your email",Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
-        googleLogin.setOnClickListener(
+        continueWithoutAccount.setOnClickListener(
             new View.OnClickListener()
             {
                 public void onClick(View view)

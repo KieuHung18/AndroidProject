@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -36,6 +37,7 @@ public class EditPublicProfileActivity extends AppCompatActivity {
     private EditText editTextFirstName,editTextLastName;
     private ImageView profileImage;
     private byte[] imageData;
+    private String TAG = "EditPublicProfileActivity";
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,18 +62,28 @@ public class EditPublicProfileActivity extends AppCompatActivity {
         done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(imageData!=null){
-                    UploadsTask uploadsTask = new UploadsTask();
-                    uploadsTask.setPostData(imageData);
-                    uploadsTask.execute();
+                String firstName = editTextFirstName.getText().toString();
+                String lastName = editTextLastName.getText().toString();
+                if(firstName.equals("")){
+                    Toast.makeText(getApplicationContext(),"First name is empty",Toast.LENGTH_SHORT).show();
                 }else{
-                    JSONObject postData = new JSONObject();
-                    try {
-                        postData.put("firstName", editTextFirstName.getText().toString());
-                        postData.put("lastName", editTextLastName.getText().toString());
-                        new PostUserInfoTask().execute("/users/", postData.toString());
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                    if(lastName.equals("")){
+                        Toast.makeText(getApplicationContext(),"Last name is empty",Toast.LENGTH_SHORT).show();
+                    }else {
+                        if(imageData!=null){
+                            UploadsTask uploadsTask = new UploadsTask();
+                            uploadsTask.setPostData(imageData);
+                            uploadsTask.execute();
+                        }else{
+                            JSONObject postData = new JSONObject();
+                            try {
+                                postData.put("firstName", firstName);
+                                postData.put("lastName", lastName);
+                                new PostUserInfoTask().execute("/users/", postData.toString());
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
                     }
                 }
             }
@@ -79,7 +91,9 @@ public class EditPublicProfileActivity extends AppCompatActivity {
         User user = new UserInfoTask(getApplicationContext()).getUser();
         editTextFirstName.setText(user.getFirstName());
         editTextLastName.setText(user.getLastName());
-        new ImageTask(profileImage).execute(user.getProfileUrl());
+        if(!user.getProfileUrl().equals("null")){
+            new ImageTask(profileImage).execute(user.getProfileUrl());
+        }
     }
     public void getImageFromAlbum() {
         try {
@@ -140,8 +154,10 @@ public class EditPublicProfileActivity extends AppCompatActivity {
             try {
                 JSONObject uploadedImage = result.getJSONObject("response");
                 String url = uploadedImage.getString("url");
+                String publicId = uploadedImage.getString("publicId");
                 JSONObject postData = new JSONObject();
                 try {
+                    postData.put("publicId", publicId);
                     postData.put("profileUrl", url);
                     postData.put("firstName", editTextFirstName.getText().toString());
                     postData.put("lastName", editTextLastName.getText().toString());
@@ -150,8 +166,9 @@ public class EditPublicProfileActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
             } catch (Exception e) {
+                e.printStackTrace();
                 String errorMessage = new HandleRequestError().handle(result).getMessage();
-                Toast.makeText(EditPublicProfileActivity.this ,errorMessage,Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "onPostExecute: "+errorMessage);
             }
         }
     }
@@ -165,13 +182,36 @@ public class EditPublicProfileActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(JSONObject result) {
             try {
-                new UserInfoTask(EditPublicProfileActivity.this).execute();
                 String response = result.getString("response");
-                Toast.makeText(EditPublicProfileActivity.this ,response,Toast.LENGTH_SHORT).show();
+                new RefreshUserData().execute("/auth");
             } catch (Exception e) {
                 e.printStackTrace();
                 String errorMessage = new HandleRequestError().handle(result).getMessage();
-                Toast.makeText(EditPublicProfileActivity.this ,errorMessage,Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "onPostExecute: "+errorMessage);
+            }
+        }
+    }
+    private class RefreshUserData extends AsyncTask<String, Void, JSONObject> {
+        @Override
+        protected JSONObject doInBackground(String... params) {
+            Request request = new Request(EditPublicProfileActivity.this);
+            return request.doPost(params[0],"");
+        }
+
+        @Override
+        protected void onPostExecute(JSONObject result) {
+            try {
+                String response = result.getString("response");
+                SharedPreferences pref = getApplicationContext().getSharedPreferences("Authentication", MODE_PRIVATE);
+                SharedPreferences.Editor Ed = pref.edit();
+                Ed.putString("authentication",response );
+                Ed.commit();
+                new UserInfoTask(EditPublicProfileActivity.this).execute();
+                finish();
+            } catch (Exception e) {
+                e.printStackTrace();
+                String errorMessage = new HandleRequestError().handle(result).getMessage();
+                Log.d(TAG, "onPostExecute: "+errorMessage);
             }
         }
     }

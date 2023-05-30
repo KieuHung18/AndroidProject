@@ -12,6 +12,8 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
+import com.example.gallery.task.UserInfoTask;
+
 public class SettingsFragment extends Fragment {
     private View view;
     private ImageButton back;
@@ -28,11 +30,9 @@ public class SettingsFragment extends Fragment {
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SharedPreferences pref = getActivity().getApplicationContext().getSharedPreferences("Authentication", 0);
-                SharedPreferences.Editor Ed = pref.edit();
-                Ed.clear();
-                Ed.commit();
+                new UserInfoTask(getContext()).logout();
                 getActivity().finish();
+                startActivity(new Intent(getActivity(),LoginActivity.class));
             }
         });
         publicProfile.setOnClickListener(
@@ -44,7 +44,6 @@ public class SettingsFragment extends Fragment {
                     }
                 }
         );
-
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

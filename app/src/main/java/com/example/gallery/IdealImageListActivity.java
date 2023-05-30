@@ -1,16 +1,18 @@
 package com.example.gallery;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -34,13 +36,36 @@ public class IdealImageListActivity extends AppCompatActivity {
     private StaggeredGridAdapter staggeredGridAdapter;
     private TextView idealName;
     ImageButton back,option;
+    private String TAG="IdealImageListActivity";
+    private Ideal ideal;
+    private User user;
+    @Override
+    protected void onStart() {
+        super.onStart();
+        artworks = new ArrayList<>();
+        if(ideal.getId()==null){
+            if(ideal.getUserId().equals(user.getId())){
+                new GetArtworkTask().execute("/users/artworks");
+            }else{
+                new GetArtworkTask().execute("/gallery/artworks/users/"+ideal.getUserId());
+            }
+        }
+        else {
+            if(ideal.getUserId().equals(user.getId())){
+                new GetArtworkTask().execute("/users/artworks/ideals/"+ideal.getId());
+            }
+            else{
+                new GetArtworkTask().execute("/gallery/artworks/ideals/"+ideal.getId());
+            }
+        }
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ideal_image_list_activity);
 
-        Ideal ideal = (Ideal) getIntent().getSerializableExtra("ideal");
+        ideal = (Ideal) getIntent().getSerializableExtra("ideal");
         artworks = new ArrayList<Artwork>();
 
         // Getting reference of recyclerView
@@ -64,24 +89,45 @@ public class IdealImageListActivity extends AppCompatActivity {
         idealName.setText(ideal.getName());
 
 
-        User user = new UserInfoTask(this).getUser();
+        user = new UserInfoTask(this).getUser();
         popupMenu.getMenuInflater().inflate(R.menu.ideal_detail_menu, popupMenu.getMenu());
 
         if(ideal.getId()==null || !ideal.getUserId().equals(user.getId())){
             option.setVisibility(View.GONE);
         }
+        AlertDialog.Builder builder = new AlertDialog.Builder(IdealImageListActivity.this);
+        builder.setMessage("Write your message here.");
+        builder.setCancelable(true);
 
+        builder.setPositiveButton(
+                "Yes",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        new DeleteIdealTask().execute("/users/ideals/"+ideal.getId());
+                        dialog.cancel();
+                    }
+                });
+
+        builder.setNegativeButton(
+                "No",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+
+        AlertDialog alert = builder.create();
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
                 switch (menuItem.getItemId()){
                     case R.id.editIdeal:
-                        Intent addIdealIntent = new Intent(IdealImageListActivity.this,AddIdealActivity.class);
+                        Intent addIdealIntent = new Intent(IdealImageListActivity.this, AddIdealActivity.class);
                         addIdealIntent.putExtra("ideal",ideal);
                         startActivity(addIdealIntent);
                         break;
                     case R.id.deleteIdeal:
-                        new DeleteIdealTask().execute("/users/ideals/"+ideal.getId());
+                        alert.show();
                         break;
                 }
                 return false;
@@ -99,12 +145,7 @@ public class IdealImageListActivity extends AppCompatActivity {
             public void onClick(View view) {
                 popupMenu.show();            }
         });
-        if(ideal.getId()==null){
-            new GetArtworkTask().execute("/users/artworks");
-        }
-        else {
-            new GetArtworkTask().execute("/users/ideals/artworks/"+ideal.getId());
-        }
+
     }
     private class GetArtworkTask extends AsyncTask<String, Void, JSONObject> {
         @Override
@@ -142,8 +183,9 @@ public class IdealImageListActivity extends AppCompatActivity {
                 staggeredGridAdapter.setArtworks(artworks);
                 recyclerView.setAdapter(staggeredGridAdapter);
             } catch (Exception e) {
+                e.printStackTrace();
                 String errorMessage = new HandleRequestError().handle(result).getMessage();
-                Toast.makeText(IdealImageListActivity.this,errorMessage,Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "onPostExecute: "+errorMessage);
             }
         }
     }
@@ -160,8 +202,9 @@ public class IdealImageListActivity extends AppCompatActivity {
                 JSONObject response = result.getJSONObject("response");
                 finish();
             } catch (Exception e) {
+                e.printStackTrace();
                 String errorMessage = new HandleRequestError().handle(result).getMessage();
-                Toast.makeText(getApplicationContext(),errorMessage,Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "onPostExecute: "+errorMessage);
             }
         }
     }

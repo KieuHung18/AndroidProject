@@ -3,13 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center_horizontal"
+    android:gravity="center"
+    android:layout_marginHorizontal="8dp"
+    android:layout_marginBottom="100dp"
     android:orientation="vertical">
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:src="@mipmap/ic_launcher" />
+        android:src="@drawable/logo" />
 
     <EditText
         android:id="@+id/editTextEmailAddress"
@@ -26,20 +28,23 @@
         android:text="Continue" />
 
     <Button
-        android:id="@+id/googleLogin"
+        android:id="@+id/continueWithoutAccount"
         style="@style/RoundedButton"
-        android:drawableLeft="@drawable/google"
-        android:text="Continue with Google"
+        android:layout_marginVertical="10dp"
         android:textColor="@color/black"
-        app:backgroundTint="@color/neutral_100" />
+        app:backgroundTint="@color/neutral_100"
+        android:text="Continue without account" />
 
     <TextView
+        android:layout_marginVertical="20dp"
         android:id="@+id/or2"
+        android:textSize="15dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Not have account?" />
 
     <TextView
+        android:textSize="15dp"
         android:id="@+id/textViewRegister"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

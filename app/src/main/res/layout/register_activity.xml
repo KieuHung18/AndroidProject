@@ -4,6 +4,7 @@
     android:orientation="vertical"
     android:gravity="center_horizontal"
     android:layout_width="match_parent"
+    android:layout_marginHorizontal="8dp"
     android:layout_height="match_parent">
 
     <LinearLayout
@@ -40,6 +41,7 @@
         android:orientation="horizontal">
 
         <EditText
+            android:layout_marginRight="4dp"
             android:id="@+id/editTextFirstName"
             style="@style/RoundedInput"
             android:layout_width="wrap_content"
@@ -51,6 +53,7 @@
             app:backgroundTint="@color/neutral_100" />
 
         <EditText
+            android:layout_marginLeft="4dp"
             android:id="@+id/editTextLastName"
             style="@style/RoundedInput"
             android:layout_width="wrap_content"
@@ -73,12 +76,15 @@
     <EditText
         android:id="@+id/editTextPassword"
         style="@style/RoundedInput"
+        android:layout_marginVertical="10dp"
+
         android:hint="@string/editTextPasswordHint"
         android:inputType="textPassword"
         app:backgroundTint="@color/neutral_100" />
 
     <EditText
         android:id="@+id/editTextConfirmPassword"
+        android:layout_marginVertical="10dp"
         style="@style/RoundedInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

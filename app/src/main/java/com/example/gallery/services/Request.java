@@ -18,11 +18,13 @@ public class Request {
 
     private static String localhost = "http://172.24.179.73:3001";
     private static String host = "https://kieuhung18-mobile-backend.onrender.com";
-    public static final String  BACKEND_URL=localhost;
+    public static final String  BACKEND_URL=host;
     private String authentication;
     public Request(Context context){
-        SharedPreferences pref = context.getSharedPreferences("Authentication", 0);
-        authentication = pref.getString("authentication", null);
+        if(context!=null){
+            SharedPreferences pref = context.getSharedPreferences("Authentication", 0);
+            authentication = pref.getString("authentication", null);
+        }
     }
     public JSONObject doPost(String url, String postData){
         url=BACKEND_URL+url;

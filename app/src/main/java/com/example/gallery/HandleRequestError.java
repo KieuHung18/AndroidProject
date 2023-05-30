@@ -2,7 +2,6 @@ package com.example.gallery;
 
 import android.util.Log;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 public class HandleRequestError {
@@ -13,6 +12,7 @@ public class HandleRequestError {
             String message = error.getString("message");
             return new Error(name,message);
         } catch (Exception e) {
+            e.printStackTrace();
             Log.e("HandleRequestError", "handle: "+e.getMessage() );
             return new Error("JSONException",e.getMessage());
         }

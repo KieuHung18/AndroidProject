@@ -29,7 +29,7 @@ public class AddIdealActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Ideal ideal = (Ideal) getIntent().getSerializableExtra("ideal");
-        setContentView(R.layout.add_ideal_acrivity);
+        setContentView(R.layout.add_ideal_acticity);
         done = findViewById(R.id.addIdealDone);
         back = findViewById(R.id.addIdealBack);
         name = findViewById(R.id.editTextIdealTitle);

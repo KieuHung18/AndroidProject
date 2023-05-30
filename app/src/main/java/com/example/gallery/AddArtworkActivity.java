@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -31,6 +32,7 @@ public class AddArtworkActivity extends AppCompatActivity {
     private ImageView artworkImage;
     private EditText name,description;
     private Button add;
+    private ImageButton back;
     private byte[] imageData;
     private Artwork postedArtwork;
     @Override
@@ -44,6 +46,7 @@ public class AddArtworkActivity extends AppCompatActivity {
         add= (Button) findViewById(R.id.add);
         name = (EditText) findViewById(R.id.editTextArtworkTitle);
         description = (EditText) findViewById(R.id.editTextArtworkDescription);
+        back=(ImageButton) findViewById(R.id.addArtworkBack);
 
         if(artwork==null){
             getImageFromAlbum();
@@ -58,27 +61,37 @@ public class AddArtworkActivity extends AppCompatActivity {
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(artwork==null){
-                    if(imageData != null){
-                        UploadsTask uploadsTask = new UploadsTask();
-                        uploadsTask.setPostData(imageData);
-                        uploadsTask.execute();
-                    }else{
-                        Toast.makeText(getApplicationContext(),"No image",Toast.LENGTH_SHORT).show();
-                    }
-                }else {
-                    JSONObject postData = new JSONObject();
-                    try {
-                        postData.put("name", name.getText().toString());
-                        postData.put("description", description.getText().toString());
-                        new ArtworkTask().execute("/users/artworks/" + artwork.getId(), postData.toString());
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                String artworkName = name.getText().toString();
+                if(artworkName.equals("")){
+                    Toast.makeText(getApplicationContext(),"Artwork name is empty",Toast.LENGTH_SHORT).show();
+                }else{
+                    if(artwork==null){
+                        if(imageData != null){
+                            UploadsTask uploadsTask = new UploadsTask();
+                            uploadsTask.setPostData(imageData);
+                            uploadsTask.execute();
+                        }else{
+                            Toast.makeText(getApplicationContext(),"No image",Toast.LENGTH_SHORT).show();
+                        }
+                    }else {
+                        JSONObject postData = new JSONObject();
+                        try {
+                            postData.put("name", name.getText().toString());
+                            postData.put("description", description.getText().toString());
+                            new ArtworkTask().execute("/users/artworks/" + artwork.getId(), postData.toString());
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }
         });
-
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
     }
     private void getImageFromAlbum() {
         try {
